@@ -303,24 +303,21 @@
 <body>
     <div class="container">
         <h1>WealthFlow Salary Tool</h1>
-        <p class="subtitle">Tax Optimizer & Salary Projections for Fiscal Year 2026</p>
+        <p class="subtitle">Tax Optimizer & Salary Projections for Fiscal Year 2026-2027</p>
 
         <div class="input-section">
             <div class="control-section">
                 <h3>Tax Structure</h3>
                 <div id="tax-brackets-container">
-                    <div class="tax-bracket"><span>Up to 600,000 PKR</span><input type="number" id="tax-rate-1"
-                            value="0"></div>
-                    <div class="tax-bracket"><span>600,001 - 1,200,000 PKR</span><input type="number" id="tax-rate-2"
-                            value="1"></div>
-                    <div class="tax-bracket"><span>1,200,001 - 2,200,000 PKR</span><input type="number" id="tax-rate-3"
-                            value="11"></div>
-                    <div class="tax-bracket"><span>2,200,001 - 3,200,000 PKR</span><input type="number" id="tax-rate-4"
-                            value="23"></div>
-                    <div class="tax-bracket"><span>3,200,001 - 4,100,000 PKR</span><input type="number" id="tax-rate-5"
-                            value="30"></div>
-                    <div class="tax-bracket"><span>Above 4,100,000 PKR</span><input type="number" id="tax-rate-6"
-                            value="35"></div>
+                    <!-- 7 brackets for FY 2026-27 -->
+                    <div class="tax-bracket"><span>Up to 600,000 PKR</span><input type="number" id="tax-rate-1" value="0"></div>
+                    <div class="tax-bracket"><span>600,001 – 1,200,000 PKR</span><input type="number" id="tax-rate-2" value="1"></div>
+                    <div class="tax-bracket"><span>1,200,001 – 2,200,000 PKR</span><input type="number" id="tax-rate-3" value="11"></div>
+                    <div class="tax-bracket"><span>2,200,001 – 3,200,000 PKR</span><input type="number" id="tax-rate-4" value="20"></div>
+                    <div class="tax-bracket"><span>3,200,001 – 4,100,000 PKR</span><input type="number" id="tax-rate-5" value="25"></div>
+                    <div class="tax-bracket"><span>4,100,001 – 5,600,000 PKR</span><input type="number" id="tax-rate-6" value="29"></div>
+                    <div class="tax-bracket"><span>5,600,001 – 7,000,000 PKR</span><input type="number" id="tax-rate-7" value="32"></div>
+                    <div class="tax-bracket"><span>Above 7,000,000 PKR</span><input type="number" id="tax-rate-8" value="35"></div>
                 </div>
 
                 <button class="btn-reset" onclick="resetTaxRates()">Reset to Default FBR Rates</button>
@@ -352,16 +349,11 @@
         <div class="salary-breakdown-section">
             <h3>Salary Breakdown Components</h3>
             <div class="salary-inputs">
-                <div class="input-group"><label>Basic Salary</label><input type="number" id="basic-salary"
-                        value="66000"></div>
-                <div class="input-group"><label>House Allowance</label><input type="number" id="house-allowance"
-                        value="22000"></div>
-                <div class="input-group"><label>Utilities</label><input type="number" id="utilities" value="11000">
-                </div>
-                <div class="input-group"><label>Work Expense (Exempt)</label><input type="number" id="work-expense"
-                        value="0"></div>
-                <div class="input-group"><label>Medical (Exempt)</label><input type="number" id="medical" value="11000">
-                </div>
+                <div class="input-group"><label>Basic Salary</label><input type="number" id="basic-salary" value="66000"></div>
+                <div class="input-group"><label>House Allowance</label><input type="number" id="house-allowance" value="22000"></div>
+                <div class="input-group"><label>Utilities</label><input type="number" id="utilities" value="11000"></div>
+                <div class="input-group"><label>Work Expense (Exempt)</label><input type="number" id="work-expense" value="0"></div>
+                <div class="input-group"><label>Medical (Exempt)</label><input type="number" id="medical" value="11000"></div>
                 <div class="input-group"><label>PF Rate (%)</label><input type="number" id="pf-rate" value="5"></div>
             </div>
             <button class="btn-manual" onclick="manualUpdate()">Update Manual Calculations</button>
@@ -370,18 +362,12 @@
         <div class="results-wrapper">
             <div class="result-section income">
                 <h3>Income Summary</h3>
-                <div class="breakdown-item"><span>Basic Salary</span><span class="val val-add"
-                        id="result-basic">0</span></div>
-                <div class="breakdown-item"><span>Housing Allowance</span><span class="val val-add"
-                        id="result-house-only">0</span></div>
-                <div class="breakdown-item"><span>Utilities Allowance</span><span class="val val-add"
-                        id="result-utils-only">0</span></div>
-                <div class="breakdown-item"><span>Medical (Exempt)</span><span class="val val-add"
-                        id="result-medical">0</span></div>
-                <div class="breakdown-item"><span>Work (Exempt)</span><span class="val val-add"
-                        id="result-work">0</span></div>
-                <div class="breakdown-item"><span>Employer PF Contribution</span><span class="val val-add"
-                        id="result-emp-pf">0</span></div>
+                <div class="breakdown-item"><span>Basic Salary</span><span class="val val-add" id="result-basic">0</span></div>
+                <div class="breakdown-item"><span>Housing Allowance</span><span class="val val-add" id="result-house-only">0</span></div>
+                <div class="breakdown-item"><span>Utilities Allowance</span><span class="val val-add" id="result-utils-only">0</span></div>
+                <div class="breakdown-item"><span>Medical (Exempt)</span><span class="val val-add" id="result-medical">0</span></div>
+                <div class="breakdown-item"><span>Work (Exempt)</span><span class="val val-add" id="result-work">0</span></div>
+                <div class="breakdown-item"><span>Employer PF Contribution</span><span class="val val-add" id="result-emp-pf">0</span></div>
 
                 <div class="result-footer">
                     <label>Total Monthly Gross (Wealth)</label>
@@ -392,10 +378,8 @@
 
             <div class="result-section deduction">
                 <h3>Deductions & Net</h3>
-                <div class="breakdown-item"><span>Income Tax (Monthly)</span><span class="val val-ded"
-                        id="result-monthly-tax">0</span></div>
-                <div class="breakdown-item"><span>Employee PF Contrib.</span><span class="val val-ded"
-                        id="result-emp-pf-ded">0</span></div>
+                <div class="breakdown-item"><span>Income Tax (Monthly)</span><span class="val val-ded" id="result-monthly-tax">0</span></div>
+                <div class="breakdown-item"><span>Employee PF Contrib.</span><span class="val val-ded" id="result-emp-pf-ded">0</span></div>
                 <div class="breakdown-item"><span>Misc Deductions</span><span class="val val-ded">Rs. 0</span></div>
 
                 <div class="result-footer">
@@ -430,7 +414,6 @@
             </div>
         </div>
     </div>
-    </div>
 </body>
 
 <script>
@@ -442,14 +425,34 @@
         return `$${Math.round(usdAmount).toLocaleString()} USD`;
     }
 
+    // FY 2026-27: 8-bracket tax calculation with updated fixed amounts and marginal rates
     function calculateTax(annualIncome, rates) {
         let tax = 0;
-        if (annualIncome <= 600000) tax = 0;
-        else if (annualIncome <= 1200000) tax = (annualIncome - 600000) * (rates[1] / 100);
-        else if (annualIncome <= 2200000) tax = 6000 + (annualIncome - 1200000) * (rates[2] / 100);
-        else if (annualIncome <= 3200000) tax = 116000 + (annualIncome - 2200000) * (rates[3] / 100);
-        else if (annualIncome <= 4100000) tax = 346000 + (annualIncome - 3200000) * (rates[4] / 100);
-        else tax = 616000 + (annualIncome - 4100000) * (rates[5] / 100);
+        if (annualIncome <= 600000) {
+            // Bracket 1: 0%
+            tax = 0;
+        } else if (annualIncome <= 1200000) {
+            // Bracket 2: 1% on amount above 600,000
+            tax = (annualIncome - 600000) * (rates[1] / 100);
+        } else if (annualIncome <= 2200000) {
+            // Bracket 3: Rs. 6,000 + 11% above 1,200,000
+            tax = 6000 + (annualIncome - 1200000) * (rates[2] / 100);
+        } else if (annualIncome <= 3200000) {
+            // Bracket 4: Rs. 116,000 + 20% above 2,200,000
+            tax = 116000 + (annualIncome - 2200000) * (rates[3] / 100);
+        } else if (annualIncome <= 4100000) {
+            // Bracket 5: Rs. 316,000 + 25% above 3,200,000
+            tax = 316000 + (annualIncome - 3200000) * (rates[4] / 100);
+        } else if (annualIncome <= 5600000) {
+            // Bracket 6: Rs. 541,000 + 29% above 4,100,000
+            tax = 541000 + (annualIncome - 4100000) * (rates[5] / 100);
+        } else if (annualIncome <= 7000000) {
+            // Bracket 7: Rs. 976,000 + 32% above 5,600,000
+            tax = 976000 + (annualIncome - 5600000) * (rates[6] / 100);
+        } else {
+            // Bracket 8: Rs. 1,424,000 + 35% above 7,000,000
+            tax = 1424000 + (annualIncome - 7000000) * (rates[7] / 100);
+        }
         return Math.max(0, tax);
     }
 
@@ -460,7 +463,9 @@
             parseFloat(document.getElementById('tax-rate-3').value),
             parseFloat(document.getElementById('tax-rate-4').value),
             parseFloat(document.getElementById('tax-rate-5').value),
-            parseFloat(document.getElementById('tax-rate-6').value)
+            parseFloat(document.getElementById('tax-rate-6').value),
+            parseFloat(document.getElementById('tax-rate-7').value),
+            parseFloat(document.getElementById('tax-rate-8').value)
         ];
     }
 
@@ -519,7 +524,8 @@
     }
 
     function resetTaxRates() {
-        const defaults = [0, 1, 11, 23, 30, 35];
+        // FY 2026-27 default FBR rates
+        const defaults = [0, 1, 11, 20, 25, 29, 32, 35];
         defaults.forEach((v, i) => document.getElementById(`tax-rate-${i + 1}`).value = v);
         calculateSalary();
     }
