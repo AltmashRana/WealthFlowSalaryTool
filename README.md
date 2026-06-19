@@ -1,6 +1,6 @@
 # WealthFlow | Salary Tool (FY 2026)
 
-This is a browser-based utility designed to calculate monthly and annual tax liabilities for salaried individuals in Pakistan. It is updated with the tax slabs for the 2026 fiscal year but allows users to adjust these brackets manually if regulations change.
+This is a browser-based utility designed to calculate monthly and annual tax liabilities for salaried individuals in Pakistan. It is updated with the tax slabs for the last 5 fiscal years but allows users to adjust these brackets manually if regulations change.
 
 ## Key Features
 
