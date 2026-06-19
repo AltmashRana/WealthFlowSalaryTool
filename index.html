@@ -8,16 +8,32 @@
     <title>WealthFlow | Salary Tool</title>
     <style>
         :root {
-            --bg-dark: #0f172a;
-            --card-bg: #1e293b;
-            --accent-blue: #00d2ff;
-            --accent-green: #10b981;
+            --primary: #818cf8;
+            --primary-glow: rgba(129, 140, 248, 0.2);
+            --accent: #34d399;
             --accent-red: #f87171;
             --accent-amber: #f59e0b;
+            --bg: #0b0f1a;
+            --card: #161b2c;
+            --input-bg: #0f172a;
             --text-main: #f8fafc;
             --text-dim: #94a3b8;
-            --border-color: rgba(255, 255, 255, 0.1);
-            --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            --border: #2d3748;
+            --font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        :root[data-theme="light"] {
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.12);
+            --accent: #059669;
+            --accent-red: #dc2626;
+            --accent-amber: #d97706;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --input-bg: #f8fafc;
+            --text-main: #0f172a;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
         }
 
         * {
@@ -28,19 +44,28 @@
 
         body {
             font-family: var(--font-family);
-            background-color: var(--bg-dark);
+            background-color: var(--bg);
             background-image:
-                radial-gradient(circle at 10% 20%, rgba(0, 210, 255, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(58, 123, 213, 0.05) 0%, transparent 40%);
+                radial-gradient(circle at 0% 0%, var(--primary-glow) 0%, transparent 25%),
+                radial-gradient(circle at 100% 100%, var(--primary-glow) 0%, transparent 25%);
             min-height: 100vh;
             color: var(--text-main);
             padding: 40px 20px;
             line-height: 1.5;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin-bottom: 8px;
         }
 
         h1 {
@@ -50,17 +75,40 @@
             letter-spacing: -0.025em;
             margin-bottom: 8px;
             text-transform: uppercase;
-            background: linear-gradient(to right, #fff, var(--text-dim));
+            background: linear-gradient(to right, var(--text-main), var(--text-dim));
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            right: 0;
+            top: 0;
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--primary);
+            transform: translateY(-1px);
         }
 
         .subtitle {
             text-align: center;
             color: var(--text-dim);
             margin-bottom: 40px;
-            font-size: 1.0rem;
+            font-size: 1rem;
         }
 
         h3 {
@@ -72,6 +120,7 @@
             color: var(--text-main);
         }
 
+        /* Layout sections */
         .input-section {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -83,36 +132,28 @@
         .salary-generator-section,
         .salary-breakdown-section,
         .result-section {
-            background: var(--card-bg);
+            background: var(--card);
             border-radius: 16px;
             padding: 28px;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border);
             display: flex;
             flex-direction: column;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
-        .control-section {
-            border-top: 4px solid var(--text-dim);
-        }
-
+        .control-section { border-top: 4px solid var(--primary); }
         .salary-generator-section {
-            border-top: 4px solid var(--accent-green);
-            background: linear-gradient(180deg, rgba(16, 185, 129, 0.05) 0%, var(--card-bg) 100%);
+            border-top: 4px solid var(--accent);
+            background: linear-gradient(180deg, var(--primary-glow) 0%, var(--card) 100%);
         }
-
         .salary-breakdown-section {
             border-top: 4px solid var(--accent-amber);
             margin-bottom: 24px;
         }
+        .result-section.income { border-top: 4px solid var(--accent); }
+        .result-section.deduction { border-top: 4px solid var(--accent-red); }
 
-        .result-section.income {
-            border-top: 4px solid var(--accent-green);
-        }
-
-        .result-section.deduction {
-            border-top: 4px solid var(--accent-red);
-        }
-
+        /* Form controls */
         .input-group {
             margin-bottom: 16px;
         }
@@ -126,23 +167,36 @@
             text-transform: uppercase;
         }
 
-        input {
+        input,
+        select {
             width: 100%;
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid var(--border-color);
+            background: var(--input-bg);
+            border: 1px solid var(--border);
             border-radius: 8px;
             padding: 12px 16px;
-            color: white;
+            color: var(--text-main);
             font-size: 1rem;
             font-family: 'JetBrains Mono', monospace;
         }
 
-        input:focus {
-            outline: none;
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 0 2px rgba(0, 210, 255, 0.1);
+        select {
+            font-family: var(--font-family);
+            cursor: pointer;
+            appearance: none;
+            background-image: linear-gradient(45deg, transparent 50%, var(--text-dim) 50%), linear-gradient(135deg, var(--text-dim) 50%, transparent 50%);
+            background-position: calc(100% - 20px) center, calc(100% - 15px) center;
+            background-size: 5px 5px, 5px 5px;
+            background-repeat: no-repeat;
         }
 
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-glow);
+        }
+
+        /* Tax brackets */
         .tax-bracket {
             display: grid;
             grid-template-columns: 1fr 100px;
@@ -152,10 +206,15 @@
             font-size: 0.9rem;
         }
 
+        .tax-bracket input {
+            text-align: right;
+        }
+
+        /* Buttons */
         .btn-primary {
             background: transparent;
-            color: var(--accent-green);
-            border: 1px solid var(--accent-green);
+            color: var(--accent);
+            border: 1px solid var(--accent);
             padding: 14px 24px;
             border-radius: 8px;
             font-weight: 800;
@@ -166,8 +225,8 @@
         }
 
         .btn-primary:hover {
-            background: var(--accent-green);
-            color: #000;
+            background: var(--accent);
+            color: #0b0f1a;
             transform: translateY(-1px);
         }
 
@@ -188,7 +247,7 @@
 
         .btn-manual:hover {
             background: var(--accent-amber);
-            color: #000;
+            color: #0b0f1a;
             transform: translateY(-1px);
         }
 
@@ -206,15 +265,18 @@
 
         .btn-reset:hover {
             color: var(--text-main);
+            border-color: var(--primary);
             transform: translateY(-1px);
         }
 
+        /* Salary inputs grid */
         .salary-inputs {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
         }
 
+        /* Results */
         .results-wrapper {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -226,8 +288,16 @@
             display: flex;
             justify-content: space-between;
             padding: 10px 0;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border);
             font-size: 0.9rem;
+        }
+
+        .breakdown-item.total-row {
+            font-weight: 800;
+            border-bottom: none;
+            border-top: 1px solid var(--border);
+            margin-top: 4px;
+            padding-top: 14px;
         }
 
         .val {
@@ -235,18 +305,13 @@
             font-weight: 600;
         }
 
-        .val-add {
-            color: var(--accent-green);
-        }
-
-        .val-ded {
-            color: var(--accent-red);
-        }
+        .val-add { color: var(--accent); }
+        .val-ded { color: var(--accent-red); }
 
         .result-footer {
             margin-top: auto;
             padding-top: 24px;
-            border-top: 2px solid var(--border-color);
+            border-top: 2px solid var(--border);
         }
 
         .hero-val {
@@ -259,7 +324,7 @@
 
         .usd-val {
             font-size: 1rem;
-            color: var(--accent-green);
+            color: var(--accent);
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -267,17 +332,22 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
+        .year-select-group {
+            margin-bottom: 20px;
+        }
+
+        /* Instructions */
         .instructions-section {
             margin-top: 60px;
             padding-top: 40px;
-            border-top: 1px solid var(--border-color);
+            border-top: 1px solid var(--border);
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 40px;
         }
 
         .info-card h4 {
-            color: var(--accent-blue);
+            color: var(--primary);
             margin-bottom: 12px;
             font-size: 1rem;
         }
@@ -288,13 +358,29 @@
             line-height: 1.6;
         }
 
-        @media (max-width: 900px) {
+        .data-note {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin-top: 14px;
+            line-height: 1.5;
+        }
 
+        /* Responsive */
+        @media (max-width: 900px) {
             .input-section,
             .salary-inputs,
             .results-wrapper,
             .instructions-section {
                 grid-template-columns: 1fr;
+            }
+
+            .theme-toggle {
+                position: static;
+                margin-bottom: 16px;
+            }
+
+            .top-bar {
+                flex-direction: column;
             }
         }
     </style>
@@ -302,63 +388,75 @@
 
 <body>
     <div class="container">
-        <h1>WealthFlow Salary Tool</h1>
-        <p class="subtitle">Tax Optimizer & Salary Projections for Fiscal Year 2026-2027</p>
+        <div class="top-bar">
+            <h1>WealthFlow Salary Tool</h1>
+            <button class="theme-toggle" id="theme-toggle" title="Toggle dark/light mode">🌙</button>
+        </div>
+        <p class="subtitle">Tax Optimizer & Salary Projections for Pakistan, FY 2026-2027</p>
 
         <div class="input-section">
-            <div class="control-section">
-                <h3>Tax Structure</h3>
-                <div id="tax-brackets-container">
-                    <!-- 7 brackets for FY 2026-27 -->
-                    <div class="tax-bracket"><span>Up to 600,000 PKR</span><input type="number" id="tax-rate-1" value="0"></div>
-                    <div class="tax-bracket"><span>600,001 – 1,200,000 PKR</span><input type="number" id="tax-rate-2" value="1"></div>
-                    <div class="tax-bracket"><span>1,200,001 – 2,200,000 PKR</span><input type="number" id="tax-rate-3" value="11"></div>
-                    <div class="tax-bracket"><span>2,200,001 – 3,200,000 PKR</span><input type="number" id="tax-rate-4" value="20"></div>
-                    <div class="tax-bracket"><span>3,200,001 – 4,100,000 PKR</span><input type="number" id="tax-rate-5" value="25"></div>
-                    <div class="tax-bracket"><span>4,100,001 – 5,600,000 PKR</span><input type="number" id="tax-rate-6" value="29"></div>
-                    <div class="tax-bracket"><span>5,600,001 – 7,000,000 PKR</span><input type="number" id="tax-rate-7" value="32"></div>
-                    <div class="tax-bracket"><span>Above 7,000,000 PKR</span><input type="number" id="tax-rate-8" value="35"></div>
-                </div>
-
-                <button class="btn-reset" onclick="resetTaxRates()">Reset to Default FBR Rates</button>
-            </div>
-
+            <!-- Auto Generator -->
             <div class="salary-generator-section">
                 <h3>Auto Salary Breakdown Generator</h3>
                 <div class="input-group">
-                    <label>Total Monthly Salary</label>
+                    <label for="total-salary">Total Monthly Salary</label>
                     <input type="number" id="total-salary" value="110000">
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="input-group">
-                        <label>Fixed Work Expense</label>
+                        <label for="fixed-work-expense">Fixed Work Expense</label>
                         <input type="number" id="fixed-work-expense" value="0">
                     </div>
                     <div class="input-group">
-                        <label>USD Exchange Rate</label>
+                        <label for="fixed-dollar-value">USD Exchange Rate</label>
                         <input type="number" id="fixed-dollar-value" value="280">
                     </div>
                 </div>
-                <button class="btn-primary" onclick="generateSalaryBreakdown()">Generate Optimization</button>
-                <p style="color: var(--accent-green); font-size: 0.75rem; margin-top: 15px; font-weight: 500;">
+                <button class="btn-primary" id="btn-generate">Generate Optimization</button>
+                <p style="color: var(--accent); font-size: 0.75rem; margin-top: 15px; font-weight: 500;">
                     Optimization logic applies a 60/20/10/10 split to maximize tax-exempt allowances.
                 </p>
+                <div id="salary-composition-card" style="margin-top:20px; padding-top:20px; border-top:1px solid var(--border);">
+                    <label>Salary Composition</label>
+                    <canvas id="salary-chart" style="width: 180px; height: 180px; margin: 15px auto; display: block;"></canvas>
+                    <div style="margin-top:12px;font-size:0.8rem;color:var(--text-dim);">
+                        <div id="taxable-ratio">Taxable Income: Rs. 0 (0%)</div>
+                        <div id="taxfree-ratio">Tax-Free Income: Rs. 0 (0%)</div>
+                    </div>
+                    <div id="current-tax-bracket" style="margin-top:12px;font-size:0.8rem;color:var(--accent);font-weight:600;">
+                        Current Tax Bracket
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tax Structure Controls -->
+            <div class="control-section">
+                <h3>Tax Structure</h3>
+                <div class="year-select-group">
+                    <label for="tax-year-select">Fiscal Year</label>
+                    <select id="tax-year-select"></select>
+                </div>
+                <div id="tax-brackets-container"></div>
+                <button class="btn-reset" id="btn-reset">Reset to Default FBR Rates</button>
+                <p class="data-note">Edit any rate above to model your own scenario — the selector will switch to "Custom" automatically and downstream brackets recalculate to stay consistent.</p>
             </div>
         </div>
 
+        <!-- Manual Breakdown -->
         <div class="salary-breakdown-section">
             <h3>Salary Breakdown Components</h3>
             <div class="salary-inputs">
-                <div class="input-group"><label>Basic Salary</label><input type="number" id="basic-salary" value="66000"></div>
-                <div class="input-group"><label>House Allowance</label><input type="number" id="house-allowance" value="22000"></div>
-                <div class="input-group"><label>Utilities</label><input type="number" id="utilities" value="11000"></div>
-                <div class="input-group"><label>Work Expense (Exempt)</label><input type="number" id="work-expense" value="0"></div>
-                <div class="input-group"><label>Medical (Exempt)</label><input type="number" id="medical" value="11000"></div>
-                <div class="input-group"><label>PF Rate (%)</label><input type="number" id="pf-rate" value="5"></div>
+                <div class="input-group"><label for="basic-salary">Basic Salary</label><input type="number" id="basic-salary" value="66000"></div>
+                <div class="input-group"><label for="house-allowance">House Allowance</label><input type="number" id="house-allowance" value="22000"></div>
+                <div class="input-group"><label for="utilities">Utilities</label><input type="number" id="utilities" value="11000"></div>
+                <div class="input-group"><label for="work-expense">Work Expense (Exempt)</label><input type="number" id="work-expense" value="0"></div>
+                <div class="input-group"><label for="medical">Medical (Exempt)</label><input type="number" id="medical" value="11000"></div>
+                <div class="input-group"><label for="pf-rate">PF Rate (%)</label><input type="number" id="pf-rate" value="5"></div>
             </div>
-            <button class="btn-manual" onclick="manualUpdate()">Update Manual Calculations</button>
+            <button class="btn-manual" id="btn-manual-update">Update Manual Calculations</button>
         </div>
 
+        <!-- Results -->
         <div class="results-wrapper">
             <div class="result-section income">
                 <h3>Income Summary</h3>
@@ -381,10 +479,11 @@
                 <div class="breakdown-item"><span>Income Tax (Monthly)</span><span class="val val-ded" id="result-monthly-tax">0</span></div>
                 <div class="breakdown-item"><span>Employee PF Contrib.</span><span class="val val-ded" id="result-emp-pf-ded">0</span></div>
                 <div class="breakdown-item"><span>Misc Deductions</span><span class="val val-ded">Rs. 0</span></div>
+                <div class="breakdown-item total-row"><span>Total Deductions</span><span class="val val-ded" id="result-total-deductions">0</span></div>
 
                 <div class="result-footer">
                     <label>Monthly Take-Home (Cash)</label>
-                    <span class="hero-val" style="color: var(--accent-blue);" id="result-takehome">0</span>
+                    <span class="hero-val" style="color: var(--primary);" id="result-takehome">0</span>
                     <div class="usd-val" id="result-takehome-usd">USD 0</div>
                 </div>
             </div>
@@ -393,144 +492,444 @@
         <div class="instructions-section">
             <div class="info-card">
                 <h4>How the Optimizer Works</h4>
-                <p>The Auto-Generator uses a standard 60% Basic Salary ratio. This helps in balancing your Provident
-                    Fund contributions while maintaining a healthy allowance structure for House Rent and Utilities.</p>
+                <p>The Auto-Generator uses a standard 60% Basic Salary ratio. This helps in balancing your Provident Fund contributions while maintaining a healthy allowance structure for House Rent and Utilities.</p>
             </div>
             <div class="info-card">
                 <h4>Tax Exemption Logic</h4>
-                <p>Medical Allowance up to 10% of Basic Salary is tax-free. Our tool automatically calculates this for
-                    you. Work Expenses are treated as direct reimbursements and are also excluded from your taxable
-                    income.</p>
+                <p>Medical Allowance up to 10% of Basic Salary is tax-free. Our tool automatically calculates this for you. Work Expenses are treated as direct reimbursements and are also excluded from your taxable income.</p>
             </div>
             <div class="info-card">
                 <h4>Provident Fund Impact</h4>
-                <p>PF is calculated based on Basic Salary. While the Employer's contribution adds to your gross wealth,
-                    your own contribution is deducted from your take-home pay.</p>
+                <p>PF is calculated based on Basic Salary. While the Employer's contribution adds to your gross wealth, your own contribution is deducted from your take-home pay.</p>
             </div>
             <div class="info-card">
                 <h4>USD Value Tracking</h4>
-                <p>For remote workers or those tracking against global benchmarks, use the Exchange Rate field. This
-                    helps you assess your market value against international standards.</p>
+                <p>For remote workers or those tracking against global benchmarks, use the Exchange Rate field. This helps you assess your market value against international standards.</p>
             </div>
         </div>
     </div>
-</body>
 
-<script>
-    function formatCurrency(amount) { return `Rs. ${Math.round(amount).toLocaleString()}`; }
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // ====================== CONFIG & STATE ======================
+        let taxRatesData = null;
+        let currentYearKey = "2026-2027";
+        const DEFAULT_YEAR_KEY = "2026-2027";
+        const CUSTOM_KEY = "__custom__";
+        let salaryCompositionChart = null;
 
-    function formatUSD(amount) {
-        const dollarValue = parseFloat(document.getElementById('fixed-dollar-value').value) || 0;
-        const usdAmount = amount / dollarValue;
-        return `$${Math.round(usdAmount).toLocaleString()} USD`;
-    }
+        const EMBEDDED_TAX_RATES = {
+            "2026-2027": { label: "FY 2026-2027", brackets: [
+                { upTo: 600000, rate: 0, fixed: 0 },
+                { upTo: 1200000, rate: 1, fixed: 0 },
+                { upTo: 2200000, rate: 11, fixed: 6000 },
+                { upTo: 3200000, rate: 20, fixed: 116000 },
+                { upTo: 4100000, rate: 25, fixed: 316000 },
+                { upTo: 5600000, rate: 29, fixed: 541000 },
+                { upTo: 7000000, rate: 32, fixed: 976000 },
+                { upTo: null, rate: 35, fixed: 1424000 }
+            ]},
+            "2025-2026": { label: "FY 2025-2026", brackets: [
+                { upTo: 600000, rate: 0, fixed: 0 },
+                { upTo: 1200000, rate: 1, fixed: 0 },
+                { upTo: 2200000, rate: 11, fixed: 6000 },
+                { upTo: 3200000, rate: 23, fixed: 116000 },
+                { upTo: 4100000, rate: 30, fixed: 346000 },
+                { upTo: null, rate: 35, fixed: 616000 }
+            ]},
+            "2024-2025": { label: "FY 2024-2025", brackets: [
+                { upTo: 600000, rate: 0, fixed: 0 },
+                { upTo: 1200000, rate: 5, fixed: 0 },
+                { upTo: 2200000, rate: 15, fixed: 30000 },
+                { upTo: 3200000, rate: 25, fixed: 180000 },
+                { upTo: 4100000, rate: 30, fixed: 430000 },
+                { upTo: null, rate: 35, fixed: 700000 }
+            ]},
+            "2023-2024": { label: "FY 2023-2024", brackets: [
+                { upTo: 600000, rate: 0, fixed: 0 },
+                { upTo: 1200000, rate: 2.5, fixed: 0 },
+                { upTo: 2400000, rate: 12.5, fixed: 15000 },
+                { upTo: 3600000, rate: 22.5, fixed: 165000 },
+                { upTo: 6000000, rate: 27.5, fixed: 435000 },
+                { upTo: null, rate: 35, fixed: 1095000 }
+            ]},
+            "2022-2023": { label: "FY 2022-2023", brackets: [
+                { upTo: 600000, rate: 0, fixed: 0 },
+                { upTo: 1200000, rate: 2.5, fixed: 0 },
+                { upTo: 2400000, rate: 12.5, fixed: 15000 },
+                { upTo: 3600000, rate: 20, fixed: 165000 },
+                { upTo: 6000000, rate: 25, fixed: 405000 },
+                { upTo: 12000000, rate: 32.5, fixed: 1005000 },
+                { upTo: null, rate: 35, fixed: 2955000 }
+            ]}
+        };
 
-    // FY 2026-27: 8-bracket tax calculation with updated fixed amounts and marginal rates
-    function calculateTax(annualIncome, rates) {
-        let tax = 0;
-        if (annualIncome <= 600000) {
-            // Bracket 1: 0%
-            tax = 0;
-        } else if (annualIncome <= 1200000) {
-            // Bracket 2: 1% on amount above 600,000
-            tax = (annualIncome - 600000) * (rates[1] / 100);
-        } else if (annualIncome <= 2200000) {
-            // Bracket 3: Rs. 6,000 + 11% above 1,200,000
-            tax = 6000 + (annualIncome - 1200000) * (rates[2] / 100);
-        } else if (annualIncome <= 3200000) {
-            // Bracket 4: Rs. 116,000 + 20% above 2,200,000
-            tax = 116000 + (annualIncome - 2200000) * (rates[3] / 100);
-        } else if (annualIncome <= 4100000) {
-            // Bracket 5: Rs. 316,000 + 25% above 3,200,000
-            tax = 316000 + (annualIncome - 3200000) * (rates[4] / 100);
-        } else if (annualIncome <= 5600000) {
-            // Bracket 6: Rs. 541,000 + 29% above 4,100,000
-            tax = 541000 + (annualIncome - 4100000) * (rates[5] / 100);
-        } else if (annualIncome <= 7000000) {
-            // Bracket 7: Rs. 976,000 + 32% above 5,600,000
-            tax = 976000 + (annualIncome - 5600000) * (rates[6] / 100);
-        } else {
-            // Bracket 8: Rs. 1,424,000 + 35% above 7,000,000
-            tax = 1424000 + (annualIncome - 7000000) * (rates[7] / 100);
+        // ====================== DOM REFERENCES ======================
+        const DOM = {
+            totalSalary: document.getElementById('total-salary'),
+            fixedWorkExpense: document.getElementById('fixed-work-expense'),
+            fixedDollarValue: document.getElementById('fixed-dollar-value'),
+            basicSalary: document.getElementById('basic-salary'),
+            houseAllowance: document.getElementById('house-allowance'),
+            utilities: document.getElementById('utilities'),
+            workExpense: document.getElementById('work-expense'),
+            medical: document.getElementById('medical'),
+            pfRate: document.getElementById('pf-rate'),
+            taxYearSelect: document.getElementById('tax-year-select'),
+            taxBracketsContainer: document.getElementById('tax-brackets-container'),
+            salaryChart: document.getElementById('salary-chart'),
+            taxableRatio: document.getElementById('taxable-ratio'),
+            taxFreeRatio: document.getElementById('taxfree-ratio'),
+            currentTaxBracket: document.getElementById('current-tax-bracket'),
+            resultBasic: document.getElementById('result-basic'),
+            resultHouse: document.getElementById('result-house-only'),
+            resultUtils: document.getElementById('result-utils-only'),
+            resultMedical: document.getElementById('result-medical'),
+            resultWork: document.getElementById('result-work'),
+            resultEmpPF: document.getElementById('result-emp-pf'),
+            resultGross: document.getElementById('result-gross'),
+            resultGrossUsd: document.getElementById('result-gross-usd'),
+            resultMonthlyTax: document.getElementById('result-monthly-tax'),
+            resultEmpPFDed: document.getElementById('result-emp-pf-ded'),
+            resultTotalDeductions: document.getElementById('result-total-deductions'),
+            resultTakeHome: document.getElementById('result-takehome'),
+            resultTakeHomeUsd: document.getElementById('result-takehome-usd'),
+            themeToggle: document.getElementById('theme-toggle'),
+            btnGenerate: document.getElementById('btn-generate'),
+            btnManualUpdate: document.getElementById('btn-manual-update'),
+            btnReset: document.getElementById('btn-reset')
+        };
+
+        // ====================== UTILITIES ======================
+        function formatCurrency(amount) {
+            return `Rs. ${Math.round(amount).toLocaleString()}`;
         }
-        return Math.max(0, tax);
-    }
 
-    function getTaxRates() {
-        return [
-            parseFloat(document.getElementById('tax-rate-1').value),
-            parseFloat(document.getElementById('tax-rate-2').value),
-            parseFloat(document.getElementById('tax-rate-3').value),
-            parseFloat(document.getElementById('tax-rate-4').value),
-            parseFloat(document.getElementById('tax-rate-5').value),
-            parseFloat(document.getElementById('tax-rate-6').value),
-            parseFloat(document.getElementById('tax-rate-7').value),
-            parseFloat(document.getElementById('tax-rate-8').value)
-        ];
-    }
+        function formatUSD(amount) {
+            const dollarRate = parseFloat(DOM.fixedDollarValue.value) || 0;
+            const usdAmount = dollarRate ? amount / dollarRate : 0;
+            return `$${Math.round(usdAmount).toLocaleString()} USD`;
+        }
 
-    function generateSalaryBreakdown() {
-        const totalSalary = parseFloat(document.getElementById('total-salary').value);
-        const fixedWorkExpense = parseFloat(document.getElementById('fixed-work-expense').value) || 0;
-        const remainingSalary = totalSalary - fixedWorkExpense;
-        if (remainingSalary <= 0) return alert('Salary must be higher than expenses');
+        function getSalaryInputs() {
+            return {
+                basic: parseFloat(DOM.basicSalary.value) || 0,
+                house: parseFloat(DOM.houseAllowance.value) || 0,
+                utils: parseFloat(DOM.utilities.value) || 0,
+                work: parseFloat(DOM.workExpense.value) || 0,
+                med: parseFloat(DOM.medical.value) || 0,
+                pfRate: parseFloat(DOM.pfRate.value) || 0
+            };
+        }
 
-        document.getElementById('basic-salary').value = Math.round(remainingSalary * 0.60);
-        document.getElementById('house-allowance').value = Math.round(remainingSalary * 0.20);
-        document.getElementById('utilities').value = Math.round(remainingSalary * 0.10);
-        document.getElementById('work-expense').value = fixedWorkExpense;
-        document.getElementById('medical').value = Math.round(remainingSalary * 0.10);
+        // ====================== TAX LOGIC ======================
+        async function loadTaxRates() {
+            taxRatesData = JSON.parse(JSON.stringify(EMBEDDED_TAX_RATES));
 
-        calculateSalary();
-        alert("Breakdown Optimized for Tax Savings!");
-    }
+            try {
+                const res = await fetch('tax-rates.json');
+                if (res.ok) {
+                    taxRatesData = await res.json();
+                }
+            } catch (err) {
+                console.warn('tax-rates.json not reachable (likely opened as a local file); using embedded tax data instead.', err);
+            }
 
-    function manualUpdate() {
-        calculateSalary();
-        alert("Manual Calculations Updated!");
-    }
+            populateYearSelect();
+            renderTaxBrackets(currentYearKey);
+        }
 
-    function calculateSalary() {
-        const basic = parseFloat(document.getElementById('basic-salary').value) || 0;
-        const house = parseFloat(document.getElementById('house-allowance').value) || 0;
-        const utils = parseFloat(document.getElementById('utilities').value) || 0;
-        const work = parseFloat(document.getElementById('work-expense').value) || 0;
-        const med = parseFloat(document.getElementById('medical').value) || 0;
-        const pfRate = parseFloat(document.getElementById('pf-rate').value) || 0;
-        const rates = getTaxRates();
+        function populateYearSelect() {
+            const select = DOM.taxYearSelect;
+            select.innerHTML = '';
 
-        const employerPF = Math.round(basic * (pfRate / 100));
-        const employeePF = Math.round(basic * (pfRate / 100));
-        const totalGross = basic + house + utils + work + med + employerPF;
+            const years = Object.keys(taxRatesData).sort((a, b) => b.localeCompare(a));
+            years.forEach(key => {
+                const opt = document.createElement('option');
+                opt.value = key;
+                opt.textContent = taxRatesData[key].label || key;
+                select.appendChild(opt);
+            });
 
-        const taxableMonthly = basic + house + utils + employerPF;
-        const annualTax = calculateTax(taxableMonthly * 12, rates);
-        const monthlyTax = Math.round(annualTax / 12);
-        const takeHome = (basic + house + utils + work + med) - (monthlyTax + employeePF);
+            const customOpt = document.createElement('option');
+            customOpt.value = CUSTOM_KEY;
+            customOpt.textContent = 'Custom (edited)';
+            select.appendChild(customOpt);
 
-        document.getElementById('result-basic').textContent = formatCurrency(basic);
-        document.getElementById('result-house-only').textContent = formatCurrency(house);
-        document.getElementById('result-utils-only').textContent = formatCurrency(utils);
-        document.getElementById('result-medical').textContent = formatCurrency(med);
-        document.getElementById('result-work').textContent = formatCurrency(work);
-        document.getElementById('result-emp-pf').textContent = formatCurrency(employerPF);
-        document.getElementById('result-gross').textContent = formatCurrency(totalGross);
-        document.getElementById('result-monthly-tax').textContent = formatCurrency(monthlyTax);
-        document.getElementById('result-emp-pf-ded').textContent = formatCurrency(employeePF);
-        document.getElementById('result-takehome').textContent = formatCurrency(takeHome);
+            select.value = currentYearKey;
+        }
 
-        document.getElementById('result-gross-usd').textContent = formatUSD(totalGross);
-        document.getElementById('result-takehome-usd').textContent = formatUSD(takeHome);
-    }
+        function renderTaxBrackets(yearKey) {
+            const container = DOM.taxBracketsContainer;
+            container.innerHTML = '';
+            const yearData = taxRatesData[yearKey];
+            if (!yearData) return;
 
-    function resetTaxRates() {
-        // FY 2026-27 default FBR rates
-        const defaults = [0, 1, 11, 20, 25, 29, 32, 35];
-        defaults.forEach((v, i) => document.getElementById(`tax-rate-${i + 1}`).value = v);
-        calculateSalary();
-    }
+            yearData.brackets.forEach((bracket, i) => {
+                const row = document.createElement('div');
+                row.className = 'tax-bracket';
 
-    document.addEventListener('DOMContentLoaded', calculateSalary);
-</script>
+                const lower = i === 0 ? 0 : yearData.brackets[i - 1].upTo;
+                let label;
+                if (i === 0) {
+                    label = `Up to ${bracket.upTo.toLocaleString()} PKR`;
+                } else if (bracket.upTo === null) {
+                    label = `Above ${lower.toLocaleString()} PKR`;
+                } else {
+                    label = `${(lower + 1).toLocaleString()} – ${bracket.upTo.toLocaleString()} PKR`;
+                }
+
+                const span = document.createElement('span');
+                span.textContent = label;
+
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.step = 'any';
+                input.id = `tax-rate-${i + 1}`;
+                input.value = bracket.rate;
+                input.title = "Edit to override this bracket's rate — switches the year selector to Custom";
+                input.addEventListener('input', () => handleTaxRateEdit(i));
+
+                row.appendChild(span);
+                row.appendChild(input);
+                container.appendChild(row);
+            });
+        }
+
+        function handleTaxRateEdit(bracketIndex) {
+            if (currentYearKey !== CUSTOM_KEY) {
+                taxRatesData[CUSTOM_KEY] = JSON.parse(JSON.stringify(taxRatesData[currentYearKey]));
+                taxRatesData[CUSTOM_KEY].label = 'Custom (edited)';
+                currentYearKey = CUSTOM_KEY;
+            }
+
+            const input = document.getElementById(`tax-rate-${bracketIndex + 1}`);
+            const newRate = parseFloat(input.value);
+            taxRatesData[CUSTOM_KEY].brackets[bracketIndex].rate = isNaN(newRate) ? 0 : newRate;
+
+            recalculateFixedAmounts(taxRatesData[CUSTOM_KEY].brackets);
+
+            DOM.taxYearSelect.value = CUSTOM_KEY;
+            calculateSalary();
+        }
+
+        function recalculateFixedAmounts(brackets) {
+            let lower = 0;
+            let cumulative = 0;
+            for (let i = 0; i < brackets.length; i++) {
+                brackets[i].fixed = cumulative;
+                const upTo = brackets[i].upTo;
+                if (upTo === null) break;
+                cumulative += (upTo - lower) * (brackets[i].rate / 100);
+                lower = upTo;
+            }
+        }
+
+        function onTaxYearChange() {
+            const chosen = DOM.taxYearSelect.value;
+            if (chosen === CUSTOM_KEY && !taxRatesData[CUSTOM_KEY]) {
+                DOM.taxYearSelect.value = currentYearKey;
+                return;
+            }
+            currentYearKey = chosen;
+            renderTaxBrackets(currentYearKey);
+            calculateSalary();
+        }
+
+        function resetTaxRates() {
+            currentYearKey = DEFAULT_YEAR_KEY;
+            delete taxRatesData[CUSTOM_KEY];
+            populateYearSelect();
+            renderTaxBrackets(currentYearKey);
+            calculateSalary();
+        }
+
+        function calculateTax(annualIncome) {
+            const yearData = taxRatesData[currentYearKey];
+            if (!yearData) return 0;
+            const brackets = yearData.brackets;
+
+            for (let i = 0; i < brackets.length; i++) {
+                const b = brackets[i];
+                const lower = i === 0 ? 0 : brackets[i - 1].upTo;
+                if (b.upTo === null || annualIncome <= b.upTo) {
+                    const taxable = annualIncome - lower;
+                    return Math.max(0, b.fixed + taxable * (b.rate / 100));
+                }
+            }
+            return 0;
+        }
+
+        function getCurrentBracket(annualIncome) {
+            const brackets = taxRatesData[currentYearKey].brackets;
+            for (let i = 0; i < brackets.length; i++) {
+                const b = brackets[i];
+                if (b.upTo === null || annualIncome <= b.upTo) {
+                    return b;
+                }
+            }
+            return brackets[brackets.length - 1];
+        }
+
+        // ====================== SALARY CALCULATIONS ======================
+        function generateSalaryBreakdown() {
+            const totalSalary = parseFloat(DOM.totalSalary.value) || 0;
+            const fixedWorkExpense = parseFloat(DOM.fixedWorkExpense.value) || 0;
+            const remaining = totalSalary - fixedWorkExpense;
+
+            if (remaining <= 0) {
+                alert('Salary must be higher than expenses');
+                return;
+            }
+
+            DOM.basicSalary.value = Math.round(remaining * 0.60);
+            DOM.houseAllowance.value = Math.round(remaining * 0.20);
+            DOM.utilities.value = Math.round(remaining * 0.10);
+            DOM.workExpense.value = fixedWorkExpense;
+            DOM.medical.value = Math.round(remaining * 0.10);
+
+            calculateSalary();
+            alert("Breakdown Optimized for Tax Savings!");
+        }
+
+        function manualUpdate() {
+            calculateSalary();
+            alert("Manual Calculations Updated!");
+        }
+
+        function calculateSalary() {
+            const inputs = getSalaryInputs();
+            const employerPF = Math.round(inputs.basic * (inputs.pfRate / 100));
+            const employeePF = Math.round(inputs.basic * (inputs.pfRate / 100));
+            const totalGross = inputs.basic + inputs.house + inputs.utils + inputs.work + inputs.med + employerPF;
+
+            const taxableMonthly = inputs.basic + inputs.house + inputs.utils + employerPF;
+            const annualTax = calculateTax(taxableMonthly * 12);
+            const monthlyTax = Math.round(annualTax / 12);
+
+            const totalDeductions = monthlyTax + employeePF;
+            const takeHome = (inputs.basic + inputs.house + inputs.utils + inputs.work + inputs.med) - totalDeductions;
+
+            const taxableIncome = taxableMonthly;
+            const taxFreeIncome = inputs.work + inputs.med;
+
+            const taxablePercent = totalGross > 0 ? ((taxableIncome / totalGross) * 100).toFixed(1) : 0;
+            const taxFreePercent = totalGross > 0 ? ((taxFreeIncome / totalGross) * 100).toFixed(1) : 0;
+
+            // Update income summary
+            DOM.resultBasic.textContent = formatCurrency(inputs.basic);
+            DOM.resultHouse.textContent = formatCurrency(inputs.house);
+            DOM.resultUtils.textContent = formatCurrency(inputs.utils);
+            DOM.resultMedical.textContent = formatCurrency(inputs.med);
+            DOM.resultWork.textContent = formatCurrency(inputs.work);
+            DOM.resultEmpPF.textContent = formatCurrency(employerPF);
+            DOM.resultGross.textContent = formatCurrency(totalGross);
+
+            // Tax percentages
+            const taxPct = totalGross > 0 ? ((monthlyTax / totalGross) * 100).toFixed(1) : 0;
+            const pfPct = totalGross > 0 ? ((employeePF / totalGross) * 100).toFixed(1) : 0;
+            const deductionPct = totalGross > 0 ? ((totalDeductions / totalGross) * 100).toFixed(1) : 0;
+
+            DOM.resultMonthlyTax.textContent = `${formatCurrency(monthlyTax)} (${taxPct}%)`;
+            DOM.resultEmpPFDed.textContent = `${formatCurrency(employeePF)} (${pfPct}%)`;
+            DOM.resultTotalDeductions.textContent = `${formatCurrency(totalDeductions)} (${deductionPct}%)`;
+
+            // Take-home
+            DOM.resultTakeHome.textContent = formatCurrency(takeHome);
+            DOM.resultGrossUsd.textContent = formatUSD(totalGross);
+            DOM.resultTakeHomeUsd.textContent = formatUSD(takeHome);
+
+            // Composition ratios
+            DOM.taxableRatio.textContent = `Taxable Income: ${formatCurrency(taxableIncome)} (${taxablePercent}%)`;
+            DOM.taxFreeRatio.textContent = `Tax-Free Income: ${formatCurrency(taxFreeIncome)} (${taxFreePercent}%)`;
+
+            // Current bracket
+            const annualIncome = taxableIncome * 12;
+            const bracket = getCurrentBracket(annualIncome);
+            DOM.currentTaxBracket.textContent = `Current Bracket: ${bracket.rate}% • FY ${currentYearKey}`;
+
+            // Update chart
+            updateSalaryCompositionChart(
+                inputs.basic, inputs.house, inputs.utils,
+                inputs.work, inputs.med, employerPF
+            );
+        }
+
+        function updateSalaryCompositionChart(basic, house, utils, work, med, employerPF) {
+            const ctx = DOM.salaryChart;
+            if (!ctx) return;
+
+            const chartData = [basic, house, utils, med, work, employerPF];
+
+            if (salaryCompositionChart) {
+                salaryCompositionChart.destroy();
+            }
+
+            salaryCompositionChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Basic', 'Housing', 'Utilities', 'Medical', 'Work Exp', 'Employer PF'],
+                    datasets: [{
+                        data: chartData,
+                        backgroundColor: [
+                            '#6366f1', '#22d3ee', '#34d399',
+                            '#a78bfa', '#fb923c', '#64748b'
+                        ],
+                        borderColor: '#161b2c',
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    cutout: '38%',
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        // ====================== THEME ======================
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            DOM.themeToggle.textContent = theme === 'light' ? '☀️' : '🌙';
+            try {
+                localStorage.setItem('wealthflow-theme', theme);
+            } catch (e) {}
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+            applyTheme(current === 'light' ? 'dark' : 'light');
+        }
+
+        function initTheme() {
+            let saved = 'dark';
+            try {
+                saved = localStorage.getItem('wealthflow-theme') || 'dark';
+            } catch (e) {}
+            applyTheme(saved);
+        }
+
+        // ====================== EVENT BINDINGS ======================
+        function setupEventListeners() {
+            DOM.btnGenerate.addEventListener('click', generateSalaryBreakdown);
+            DOM.btnManualUpdate.addEventListener('click', manualUpdate);
+            DOM.btnReset.addEventListener('click', resetTaxRates);
+            DOM.taxYearSelect.addEventListener('change', onTaxYearChange);
+            DOM.themeToggle.addEventListener('click', toggleTheme);
+        }
+
+        // ====================== INITIALIZATION ======================
+        function init() {
+            initTheme();
+            setupEventListeners();
+            loadTaxRates().then(() => {
+                calculateSalary();
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
 
 </html>
